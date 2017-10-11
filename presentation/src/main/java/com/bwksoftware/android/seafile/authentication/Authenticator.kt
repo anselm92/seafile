@@ -99,12 +99,15 @@ class Authenticator @Inject constructor(val mContext: Context) : AbstractAccount
     }
 
     fun getCurrentUserAuthToken(accountName:String, activity: Activity): String {
-        val account : Account = Account(accountName, "full_access")
-        val accountFuture = AccountManager.get(mContext).getAuthToken(account, "ah", null, activity,
-                null, null)
-        val authTokenBundle = accountFuture.result
-        val authToken = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN)!!.toString()
-        return authToken
+        val account : Account = Account(accountName, mContext.packageName)
+
+        return AccountManager.get(mContext).peekAuthToken(account,"full_access")
+
+//        val accountFuture = AccountManager.get(mContext).getAuthToken(account, "ah", null, activity,
+//                null, null)
+//        val authTokenBundle = accountFuture.result
+//        val authToken = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN)!!.toString()
+//        return authToken
     }
 
 }

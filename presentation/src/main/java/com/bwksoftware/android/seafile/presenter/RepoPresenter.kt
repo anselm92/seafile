@@ -21,17 +21,19 @@ import com.bwksoftware.android.seafile.authentication.Authenticator
 import com.bwksoftware.android.seafile.domain.RepoTemplate
 import com.bwksoftware.android.seafile.domain.interactor.DefaultObserver
 import com.bwksoftware.android.seafile.domain.interactor.GetRepoList
+import com.bwksoftware.android.seafile.mapper.RepoModelMapper
 import com.bwksoftware.android.seafile.view.views.RepoView
 import javax.inject.Inject
 
 
-class RepoPresenter @Inject constructor(val getRepoList: GetRepoList) {
+class RepoPresenter @Inject constructor(val getRepoList: GetRepoList, val repoModelMapper: RepoModelMapper) {
 
     internal lateinit var repoView: RepoView
     @Inject lateinit var authenticator:Authenticator
 
 
     fun getRepos(accountName : String) {
+
         val authToken = authenticator.getCurrentUserAuthToken(accountName, repoView.activity())
         this.getRepoList.execute(RepoObserver(), GetRepoList.Params(false,authToken))
     }
@@ -48,7 +50,7 @@ class RepoPresenter @Inject constructor(val getRepoList: GetRepoList) {
         }
 
         override fun onNext(repoList: List<RepoTemplate>) {
-            Log.d("AccountPresenter", "yolo")
+            repoView.renderRepos(repoModelMapper.transformRepos(repoList))
         }
     }
 }

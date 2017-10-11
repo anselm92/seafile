@@ -31,7 +31,7 @@ interface RestAPI {
         var API_BASE_URL = "https://cloud.bwk-technik.de/api2/"
     }
 
-    @GET("repos")
+    @GET("repos/")
     fun getRepoList(@Header("Authorization") auth:String): Observable<List<Repo>>
 
 

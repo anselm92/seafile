@@ -16,7 +16,35 @@
 
 package com.bwksoftware.android.seafile.data.entity
 
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+
 /**
  * Created by ansel on 10/10/2017.
  */
-class Repo
+class Repo {
+    @SerializedName("name")
+    @Expose
+    open var name: String? = null
+
+    @SerializedName("permission")
+    @Expose
+    open var permission: String? = null
+
+    @SerializedName("encrypted")
+    @Expose
+    open var encrypted: Boolean? = null
+
+    @SerializedName("owner")
+    @Expose
+    open var owner: String? = null
+
+    @SerializedName("mtime")
+    @Expose
+    open var mtime: Long? = null
+
+    @SerializedName("size")
+    @Expose
+    open var size: Long? = null
+
+}

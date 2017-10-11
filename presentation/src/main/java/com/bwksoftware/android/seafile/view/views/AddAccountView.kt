@@ -16,9 +16,10 @@
 
 package com.bwksoftware.android.seafile.view.views
 
-import com.bwksoftware.android.seafile.model.Repo
+import android.accounts.Account
 
 
-interface RepoView : LoadDataView {
-    fun renderRepos(repos: List<Repo>)
+interface AddAccountView : LoadDataView {
+    fun onCreateSuccessful(account: Account)
+    fun onCreateUnsuccessful()
 }

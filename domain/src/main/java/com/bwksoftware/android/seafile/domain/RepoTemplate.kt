@@ -16,7 +16,6 @@
 
 package com.bwksoftware.android.seafile.domain
 
-/**
- * Created by ansel on 10/10/2017.
- */
-class RepoTemplate
+
+class RepoTemplate(val name: String?, val permission: String?, val owner: String?,val encrypted: Boolean?,
+                   val mtime: Long?, val size: Long?)

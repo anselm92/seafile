@@ -17,12 +17,11 @@ package com.bwksoftware.android.seafile.internal.di.components
 
 import android.content.Context
 import com.bwksoftware.android.seafile.App
-import com.bwksoftware.android.seafile.authentication.Authenticator
-import com.bwksoftware.android.seafile.data.repository.DataRepository
 import com.bwksoftware.android.seafile.domain.executor.PostExecutionThread
 import com.bwksoftware.android.seafile.domain.executor.ThreadExecutor
 import com.bwksoftware.android.seafile.domain.repository.Repository
 import com.bwksoftware.android.seafile.internal.di.modules.ApplicationModule
+import com.bwksoftware.android.seafile.view.fragment.AddAccountFragment
 import com.bwksoftware.android.seafile.view.fragment.ReposFragment
 import com.bwksoftware.android.seafile.view.fragment.UploadsFragment
 import dagger.Component
@@ -39,7 +38,7 @@ interface ApplicationComponent {
 
     fun inject(reposFragment: ReposFragment)
     fun inject(uploadsFragment: UploadsFragment)
-
+    fun inject(addAccountFragment: AddAccountFragment)
 
     //    val androidApplication: App
 //

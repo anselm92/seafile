@@ -58,6 +58,6 @@ class RestApiImpl @Inject constructor() {
     }
 
     fun getRepoList(authToken: String): Observable<List<Repo>> {
-        return service.getRepoList(authToken)
+        return service.getRepoList("Token "+authToken)
     }
 }

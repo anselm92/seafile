@@ -18,14 +18,22 @@ package com.bwksoftware.android.seafile.view.fragment
 
 import android.accounts.Account
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.bwksoftware.android.seafile.R
+import com.bwksoftware.android.seafile.model.Repo
 import com.bwksoftware.android.seafile.presenter.RepoPresenter
+import com.bwksoftware.android.seafile.view.adapter.RepoAdapter
 import com.bwksoftware.android.seafile.view.views.RepoView
 import javax.inject.Inject
 
 
-class ReposFragment : BaseFragment(), RepoView {
+class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener {
+    override fun onRepoClicked(repo: Repo) {
+
+    }
+
 
     companion object {
         private const val PARAM_ACCOUNT = "param_account"
@@ -40,6 +48,9 @@ class ReposFragment : BaseFragment(), RepoView {
     }
 
     @Inject lateinit var repoPresenter: RepoPresenter
+    lateinit var repoAdapter: RepoAdapter
+
+    lateinit var rvRepos: RecyclerView
 
     override fun layoutId() = R.layout.fragment_repos
 
@@ -48,14 +59,23 @@ class ReposFragment : BaseFragment(), RepoView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
+        repoAdapter = RepoAdapter(this, context)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        rvRepos = view?.findViewById(R.id.rv_repos)!!
+        rvRepos.adapter = repoAdapter
+        rvRepos.layoutManager = LinearLayoutManager(this.context)
         if (firstTimeCreated(savedInstanceState)) {
             initializeView()
             loadRepos()
         }
+    }
+
+    override fun renderRepos(repos: List<Repo>) {
+        repoAdapter.setItems(repos)
+        repoAdapter.notifyDataSetChanged()
     }
 
     private fun loadRepos() {

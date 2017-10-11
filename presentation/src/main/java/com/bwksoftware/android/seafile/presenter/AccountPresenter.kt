@@ -64,9 +64,11 @@ class AccountPresenter @Inject constructor(private val getAccountToken: GetAccou
         val accounts = accountManager.getAccountsByType(BuildConfig.APPLICATION_ID)
         val currentAccountName = prefsController.getPreference(
                 SharedPrefsController.Preference.CURRENT_USER_ACCOUNT)
-        val accountsOrdered = accounts.sortedWith(kotlin.Comparator { o1, _ ->
+        var accountsOrdered = accounts.sortedWith(kotlin.Comparator { o1, _ ->
             if (o1.name == currentAccountName) -1 else 0
         })
+        if(accountsOrdered.isEmpty())
+            accountsOrdered = listOf(Account("None","full_access"))
         view.showAccounts(accountMapper.transformAccounts(accountsOrdered) + items)
     }
 

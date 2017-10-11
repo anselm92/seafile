@@ -33,7 +33,8 @@ class EntityDataMapper {
     }
 
     fun transformRepo(repo: Repo): RepoTemplate {
-        val newRepo = RepoTemplate()
+        val newRepo = RepoTemplate(repo.name, repo.permission, repo.owner, repo.encrypted,
+                repo.mtime, repo.size)
         return newRepo
     }
 

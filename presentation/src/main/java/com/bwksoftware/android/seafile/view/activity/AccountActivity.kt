@@ -38,21 +38,22 @@ import com.bwksoftware.android.seafile.model.NavBaseItem
 import com.bwksoftware.android.seafile.navigation.Navigator
 import com.bwksoftware.android.seafile.presenter.AccountPresenter
 import com.bwksoftware.android.seafile.view.adapter.AccountAdapter
+import com.bwksoftware.android.seafile.view.fragment.AddAccountFragment
 import com.bwksoftware.android.seafile.view.fragment.ReposFragment
 import com.bwksoftware.android.seafile.view.views.AccountView
 import javax.inject.Inject
+import android.accounts.Account as AndroidAccount
 
 
-class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemClickListener {
-
-
+class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemClickListener, AddAccountFragment.OnAddAccountListener {
 
     lateinit private var navRecyclerView: RecyclerView
     lateinit private var toolbar: Toolbar
     lateinit private var drawerLayout: DrawerLayout
     lateinit private var accountAdapter: AccountAdapter
     lateinit private var navMenu: Menu
-    lateinit private var reposFragment : ReposFragment
+
+    private var reposFragment: ReposFragment? = null
 
     @Inject
     lateinit var presenter: AccountPresenter
@@ -83,12 +84,15 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
 
 
     override fun onButtonClicked(itemId: Int) {
-        when(itemId){
+        when (itemId) {
             R.id.repos -> {
-                navigator.navigateToReposView(this, reposFragment, presenter.currentAccount)
+                navigator.navigateToReposView(this, supportFragmentManager, presenter.currentAccount)
             }
             R.id.uploads -> {
-                navigator.navigateToUploadsView(this,reposFragment)
+                navigator.navigateToUploadsView(this, supportFragmentManager)
+            }
+            R.id.add_account -> {
+                navigator.navigateToAddAccountView(this,supportFragmentManager)
             }
         }
         drawerLayout.closeDrawer(Gravity.START)
@@ -116,23 +120,24 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
 
     override fun selectAccount(account: Account) {
         initNavigationDrawer()
-        reposFragment = ReposFragment.forAccount(presenter.currentAccount)
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.container, reposFragment)
-                .commit();
+
+    }
+
+    override fun onAccountComplete(account: Account) {
+        refreshAccountList()
+        onAccountClicked(account)
+        supportFragmentManager.popBackStack()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         component.inject(this)
-        presenter.createNewAccount("anselm92@gmail.com", "oVbfVDWMbO")
-        presenter.createNewAccount("anselm.binninger@bwk-technik.de", "gk4Dxx6fMoX")
         accountAdapter = AccountAdapter(this, this)
         presenter.view = this
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
+        initNavigationDrawer()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -150,7 +155,8 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
             this.setAdapter(accountAdapter)
         }
         drawerLayout = findViewById<View>(R.id.drawer) as DrawerLayout
-        val actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+        val actionBarDrawerToggle = object : ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.drawer_open, R.string.drawer_close) {
         }
         drawerLayout!!.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
