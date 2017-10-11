@@ -1,0 +1,1 @@
+# Seafile Kotlin Android Client [![Build Status](https://travis-ci.org/anselm92/seafile.png?branch=master)](https://travis-ci.org/anselm92/seafile)
