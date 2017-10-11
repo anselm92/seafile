@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Seafile</string>
+    <string name="authtype">com.bwksoftware.android.seafile</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+</resources>

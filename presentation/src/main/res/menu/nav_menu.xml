@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/repos"
+            android:icon="@drawable/repo"
+            android:title="All repositories" />
+
+
+        <item
+            android:id="@+id/uploads"
+            android:icon="@drawable/upload"
+            android:title="Uploads" />
+        <item
+            android:id="@+id/trash"
+            android:icon="@drawable/trash"
+            android:title="Trash" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/settings"
+            android:title="Settings" />
+    </group>
+</menu>
