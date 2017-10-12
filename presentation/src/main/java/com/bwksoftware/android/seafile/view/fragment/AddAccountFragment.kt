@@ -62,6 +62,8 @@ class AddAccountFragment : BaseFragment(), AddAccountView {
 
     override fun layoutId() = R.layout.fragment_create_account
 
+    override fun name() = "Add account"
+
     override fun activity() = activity
 
     override fun onCreate(savedInstanceState: Bundle?) {

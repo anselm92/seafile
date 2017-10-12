@@ -20,18 +20,33 @@ import android.accounts.Account
 import android.content.Context
 import android.support.v4.app.FragmentManager
 import com.bwksoftware.android.seafile.R
-import com.bwksoftware.android.seafile.view.fragment.AddAccountFragment
-import com.bwksoftware.android.seafile.view.fragment.DirectoryFragment
-import com.bwksoftware.android.seafile.view.fragment.ReposFragment
-import com.bwksoftware.android.seafile.view.fragment.UploadsFragment
+import com.bwksoftware.android.seafile.view.activity.AccountActivity
+import com.bwksoftware.android.seafile.view.fragment.*
 import javax.inject.Inject
 
 class Navigator @Inject constructor() {
 
-    fun navigateToDirectory(context: Context, fragmentManager: FragmentManager, account: Account,
-                            repoId: String,directory: String) {
+    fun findCurrentName(fragment: BaseFragment): String {
+        if(fragment.childFragmentManager!=null && fragment.childFragmentManager.backStackEntryCount>0){
+            val lastFragmentName = fragment.childFragmentManager.getBackStackEntryAt(
+                    fragment.childFragmentManager.backStackEntryCount - 1).name
+            val childFragment = fragment.childFragmentManager.findFragmentByTag(
+                    lastFragmentName)
+            return findCurrentName(childFragment as BaseFragment)
+        } else {
+            return fragment.name()
+        }
+    }
 
-        val directoryFragment = DirectoryFragment.forAccountRepoAndDir(account,repoId,directory)
+    fun setName(context: Context,fragment: BaseFragment, fragmentManager: FragmentManager){
+        var name : String = findCurrentName(fragment)
+        (context as? AccountActivity)?.setTitle(name)
+    }
+
+    fun navigateToDirectory(context: Context, fragmentManager: FragmentManager, account: Account,
+                            repoId: String,repoName: String, directory: String) {
+
+        val directoryFragment = DirectoryFragment.forAccountRepoAndDir(account,repoId,repoName, directory)
 
         val transaction = fragmentManager.beginTransaction()
         // Store the Fragment in stack
@@ -39,12 +54,15 @@ class Navigator @Inject constructor() {
         //        transaction.setCustomAnimations(R.anim.enter_from_center,R.anim.exit_from_center);
         transaction.replace(R.id.container, directoryFragment,
                 DirectoryFragment::class.java.name).commit()
+        fragmentManager.executePendingTransactions()
+        setName(context,directoryFragment,fragmentManager)
+
     }
 
     fun navigateToReposView(context: Context, fragmentManager: FragmentManager, account: Account) {
-//        var exercisesFragment = fragmentManager.findFragmentByTag(ReposFragment::class.java.name)
-//        if (exercisesFragment == null)
-        val exercisesFragment = ReposFragment.forAccount(account)
+        var exercisesFragment = fragmentManager.findFragmentByTag(ReposFragment::class.java.name)
+        if (exercisesFragment == null)
+            exercisesFragment = ReposFragment.forAccount(account)
 
         val transaction = fragmentManager.beginTransaction()
         // Store the Fragment in stack
@@ -52,6 +70,10 @@ class Navigator @Inject constructor() {
         //        transaction.setCustomAnimations(R.anim.enter_from_center,R.anim.exit_from_center);
         transaction.replace(R.id.container, exercisesFragment,
                 ReposFragment::class.java.name).commit()
+        fragmentManager.executePendingTransactions()
+
+        setName(context, exercisesFragment as BaseFragment,fragmentManager)
+
     }
 
     fun navigateToUploadsView(context: Context, fragmentManager: FragmentManager) {
@@ -59,12 +81,17 @@ class Navigator @Inject constructor() {
         if (exercisesFragment == null)
             exercisesFragment = UploadsFragment()
 
+
         val transaction = fragmentManager.beginTransaction()
         // Store the Fragment in stack
         transaction.addToBackStack(UploadsFragment::class.java.name)
         //        transaction.setCustomAnimations(R.anim.enter_from_center,R.anim.exit_from_center);
         transaction.replace(R.id.container, exercisesFragment,
                 UploadsFragment::class.java.name).commit()
+        fragmentManager.executePendingTransactions()
+
+        setName(context, exercisesFragment as BaseFragment,fragmentManager)
+
     }
 
     fun navigateToAddAccountView(context: Context, fragmentManager: FragmentManager) {
@@ -79,5 +106,9 @@ class Navigator @Inject constructor() {
         //        transaction.setCustomAnimations(R.anim.enter_from_center,R.anim.exit_from_center);
         transaction.replace(R.id.container, addAccountFragment, AddAccountFragment::
         class.java.name).commit()
+        fragmentManager.executePendingTransactions()
+
+        setName(context,addAccountFragment,fragmentManager)
+
     }
 }

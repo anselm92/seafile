@@ -18,6 +18,7 @@ package com.bwksoftware.android.seafile.view.activity
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -39,11 +40,14 @@ import com.bwksoftware.android.seafile.navigation.Navigator
 import com.bwksoftware.android.seafile.presenter.AccountPresenter
 import com.bwksoftware.android.seafile.view.adapter.AccountAdapter
 import com.bwksoftware.android.seafile.view.fragment.AddAccountFragment
+import com.bwksoftware.android.seafile.view.fragment.BaseFragment
 import com.bwksoftware.android.seafile.view.fragment.DirectoryFragment
 import com.bwksoftware.android.seafile.view.fragment.ReposFragment
 import com.bwksoftware.android.seafile.view.views.AccountView
 import javax.inject.Inject
 import android.accounts.Account as AndroidAccount
+
+
 
 
 class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemClickListener, AddAccountFragment.OnAddAccountListener, ReposFragment.OnRepoClickedListener, DirectoryFragment.OnDirectoryClickedListener {
@@ -83,16 +87,16 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         presenter.showAccountList(navMenu)
     }
 
-    override fun onRepoClicked(repoId: String) {
-        navigator.navigateToDirectory(this, supportFragmentManager, presenter.currentAccount,
-                repoId,"")
+    override fun onRepoClicked(fragment: BaseFragment, repoId: String, repoName: String) {
+        navigator.navigateToDirectory(this, fragment.childFragmentManager, presenter.currentAccount,
+                repoId,repoName,"")
     }
 
-    override fun onDirectoryClicked(repoId: String, directory: String) {
-        navigator.navigateToDirectory(this, supportFragmentManager, presenter.currentAccount,
-                repoId,directory)    }
+    override fun onDirectoryClicked(fragment: BaseFragment, repoId: String,repoName: String, directory: String) {
+        navigator.navigateToDirectory(this, fragment.childFragmentManager, presenter.currentAccount,
+                repoId,repoName,directory)    }
 
-    override fun onFileClicked(repoId: String, file: String) {
+    override fun onFileClicked(fragment: BaseFragment, repoId: String,repoName: String, file: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -146,8 +150,12 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         presenter.view = this
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        initNavigationDrawer()
-        presenter.init()
+        if (savedInstanceState == null) {
+            initNavigationDrawer()
+            presenter.init()
+            initScreen()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -156,6 +164,10 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         navMenu = menu!!
         presenter.showNavList(navMenu)
         return true
+    }
+
+    fun setTitle(title: String){
+        toolbar.title = title
     }
 
     private fun initNavigationDrawer() {
@@ -171,4 +183,52 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         drawerLayout!!.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
     }
+
+    private fun initScreen(){
+        reposFragment = ReposFragment.forAccount(presenter.currentAccount)
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.container, reposFragment)
+                .commit();
+        setTitle(reposFragment!!.name());
+    }
+
+    private var doubleBackToExitPressedOnce: Boolean = false
+
+    private var onBackPressedOnMainFragmentPressedOnce: Boolean = false
+
+    override fun onBackPressed() {
+
+        if (!getActiveFragment()?.onBackPressed()!!) {
+            if (!onBackPressedOnMainFragmentPressedOnce) {
+                onBackPressedOnMainFragmentPressedOnce = true
+                return
+            }
+            // container Fragment or its associates couldn't handle the back pressed task
+            // delegating the task to super class
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed()
+                return
+            }
+
+            this.doubleBackToExitPressedOnce = true
+            Toast.makeText(this, "Please click back again to logout", Toast.LENGTH_SHORT).show()
+
+            Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+
+        } else {
+            // carousel handled the back pressed task
+            // do not call super
+        }
+    }
+
+    fun getActiveFragment(): BaseFragment? {
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            return reposFragment
+        }
+        val tag = supportFragmentManager.getBackStackEntryAt(
+                supportFragmentManager.backStackEntryCount - 1).name
+        return supportFragmentManager.findFragmentByTag(tag) as BaseFragment?
+    }
+
+
 }

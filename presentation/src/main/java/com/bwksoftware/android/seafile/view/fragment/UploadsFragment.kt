@@ -22,6 +22,8 @@ import com.bwksoftware.android.seafile.R
 class UploadsFragment : BaseFragment() {
     override fun layoutId() = R.layout.fragment_uploads
 
+    override fun name() = "Uploads"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)

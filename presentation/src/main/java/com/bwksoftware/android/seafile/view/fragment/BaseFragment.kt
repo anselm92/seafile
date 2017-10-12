@@ -21,15 +21,19 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bwksoftware.android.seafile.App
+import com.bwksoftware.android.seafile.components.BackPressImpl
+import com.bwksoftware.android.seafile.components.OnBackPressListener
 import com.bwksoftware.android.seafile.internal.di.components.ApplicationComponent
 
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment(), OnBackPressListener {
     init {
         retainInstance = true
     }
 
     abstract fun layoutId(): Int
+
+    abstract fun name(): String
 
     val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (activity.application as App).component
@@ -38,7 +42,7 @@ abstract class BaseFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflater?.inflate(layoutId(), container, false)
 
-    open fun onBackPressed() {}
+    override fun onBackPressed() : Boolean {return BackPressImpl(this).onBackPressed()}
 
     internal fun firstTimeCreated(savedInstanceState: Bundle?) = savedInstanceState == null
 }

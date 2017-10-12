@@ -32,7 +32,7 @@ import javax.inject.Inject
 class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener {
 
     interface OnRepoClickedListener {
-        fun onRepoClicked(repoId: String)
+        fun onRepoClicked(fragment: BaseFragment, repoId: String, repoName: String)
     }
 
     companion object {
@@ -53,6 +53,8 @@ class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener 
     lateinit var rvRepos: RecyclerView
 
     override fun layoutId() = R.layout.fragment_repos
+
+    override fun name() = "Repos"
 
     override fun activity() = activity
 
@@ -81,8 +83,8 @@ class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener 
     override fun onRepoClicked(repo: Repo) {
         val attachedActivity = activity
         when (attachedActivity) {
-            is OnRepoClickedListener -> attachedActivity.onRepoClicked(
-                    repo.id!!)
+            is OnRepoClickedListener -> attachedActivity.onRepoClicked(this,
+                    repo.id!!, repo.name!!)
         }
     }
 

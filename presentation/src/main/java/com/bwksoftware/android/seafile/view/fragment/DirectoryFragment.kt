@@ -33,22 +33,27 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
 
 
     interface OnDirectoryClickedListener {
-        fun onDirectoryClicked(repoId: String, directory: String)
-        fun onFileClicked(repoId: String, file: String)
+        fun onDirectoryClicked(fragment: BaseFragment, repoId: String, repoName: String,
+                               directory: String)
+
+        fun onFileClicked(fragment: BaseFragment, repoId: String, repoName: String, file: String)
     }
 
     companion object {
         private const val PARAM_ACCOUNT = "param_account"
         private const val PARAM_DIRECTORY = "param_directory"
         private const val PARAM_REPOID = "param_repoid"
+        private const val PARAM_REPONAME = "param_reponame"
 
         fun forAccountRepoAndDir(account: Account, repoId: String,
+                                 repoName: String,
                                  directory: String): DirectoryFragment {
             val reposFragment = DirectoryFragment()
             val arguments = Bundle()
             arguments.putString(PARAM_ACCOUNT, account.name)
             arguments.putString(PARAM_DIRECTORY, directory)
             arguments.putString(PARAM_REPOID, repoId)
+            arguments.putString(PARAM_REPONAME, repoName)
             reposFragment.arguments = arguments
             return reposFragment
         }
@@ -60,6 +65,9 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
     lateinit var rvDirectory: RecyclerView
 
     override fun layoutId() = R.layout.fragment_directory
+
+    override fun name() = arguments.getString(PARAM_REPONAME) + arguments.getString(
+            PARAM_DIRECTORY)
 
     override fun activity() = activity
 
@@ -88,9 +96,9 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
     override fun onDirectoryClicked(item: Item) {
         val attachedActivity = activity
         when (attachedActivity) {
-            is OnDirectoryClickedListener -> attachedActivity.onDirectoryClicked(
-                    arguments.getString(
-                            PARAM_REPOID),
+            is OnDirectoryClickedListener -> attachedActivity.onDirectoryClicked(this,
+                    arguments.getString(PARAM_REPOID),
+                    arguments.getString(PARAM_REPONAME),
                     arguments.getString(PARAM_DIRECTORY) + "/" + item.name)
         }
     }
@@ -98,9 +106,9 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
     override fun onFileClicked(item: Item) {
         val attachedActivity = activity
         when (attachedActivity) {
-            is OnDirectoryClickedListener -> attachedActivity.onFileClicked(
-                    arguments.getString(
-                    PARAM_REPOID),
+            is OnDirectoryClickedListener -> attachedActivity.onFileClicked(this,
+                    arguments.getString(PARAM_REPOID),
+                    arguments.getString(PARAM_REPONAME),
                     arguments.getString(PARAM_DIRECTORY) + "/" + item.name)
         }
     }
