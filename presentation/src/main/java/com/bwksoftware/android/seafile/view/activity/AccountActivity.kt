@@ -19,6 +19,7 @@ package com.bwksoftware.android.seafile.view.activity
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.FragmentManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -133,7 +134,8 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
 
     override fun selectAccount(account: Account) {
         initNavigationDrawer()
-
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        initScreen()
     }
 
     override fun onAccountComplete(account: Account) {
