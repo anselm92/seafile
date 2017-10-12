@@ -86,13 +86,14 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
     override fun onButtonClicked(itemId: Int) {
         when (itemId) {
             R.id.repos -> {
-                navigator.navigateToReposView(this, supportFragmentManager, presenter.currentAccount)
+                navigator.navigateToReposView(this, supportFragmentManager,
+                        presenter.currentAccount)
             }
             R.id.uploads -> {
                 navigator.navigateToUploadsView(this, supportFragmentManager)
             }
             R.id.add_account -> {
-                navigator.navigateToAddAccountView(this,supportFragmentManager)
+                navigator.navigateToAddAccountView(this, supportFragmentManager)
             }
         }
         drawerLayout.closeDrawer(Gravity.START)
@@ -110,11 +111,6 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
 
     override fun showNavList(items: List<NavBaseItem>) {
         accountAdapter.setItems(items)
-        accountAdapter.notifyDataSetChanged()
-    }
-
-    override fun showAccounts(accounts: List<NavBaseItem>) {
-        accountAdapter.setItems(accounts)
         accountAdapter.notifyDataSetChanged()
     }
 
@@ -138,6 +134,7 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         initNavigationDrawer()
+        presenter.init()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

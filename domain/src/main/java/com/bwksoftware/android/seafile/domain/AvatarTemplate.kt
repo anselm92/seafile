@@ -14,23 +14,11 @@
  *    limitations under the License.
  */
 
-package com.bwksoftware.android.seafile.data.entity
-
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+package com.bwksoftware.android.seafile.domain
 
 /**
  * Created by ansel on 10/10/2017.
  */
-open class Account {
+class AvatarTemplate(val url: String) {
 
-    @SerializedName("token")
-    @Expose
-    open var token: String? = null
-
-
-    open var username : String = ""
-
-    open var password : String? = null
-    open var imgUrl : String = ""
 }

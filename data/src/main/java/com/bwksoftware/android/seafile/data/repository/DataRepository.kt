@@ -19,6 +19,7 @@ package com.bwksoftware.android.seafile.data.repository
 import com.bwksoftware.android.seafile.data.entity.entityDataMapper
 import com.bwksoftware.android.seafile.data.net.RestApiImpl
 import com.bwksoftware.android.seafile.domain.AccountTemplate
+import com.bwksoftware.android.seafile.domain.AvatarTemplate
 import com.bwksoftware.android.seafile.domain.RepoTemplate
 import com.bwksoftware.android.seafile.domain.repository.Repository
 import io.reactivex.Observable
@@ -27,6 +28,9 @@ import javax.inject.Inject
 
 class DataRepository @Inject constructor(private val restService: RestApiImpl) : Repository {
 
+    override fun getAvatar(username: String, token: String) : Observable<AvatarTemplate>{
+        return restService.getAvatar(username, token).map(entityDataMapper::transformAvatar)
+    }
 
     override fun getRepoList(authToken: String): Observable<List<RepoTemplate>> {
         return restService.getRepoList(authToken).map(entityDataMapper::transformRepoList)

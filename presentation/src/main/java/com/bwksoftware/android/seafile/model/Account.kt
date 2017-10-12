@@ -16,4 +16,4 @@
 
 package com.bwksoftware.android.seafile.model
 
-class Account(val name: String, val imgLink: String) : NavBaseItem(NavBaseItem.TYPE_ACCOUNT)
+class Account(val token: String, val name: String, var imgLink: String) : NavBaseItem(NavBaseItem.TYPE_ACCOUNT)

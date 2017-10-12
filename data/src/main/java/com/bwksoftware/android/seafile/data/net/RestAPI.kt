@@ -17,13 +17,11 @@
 package com.bwksoftware.android.seafile.data.net
 
 import com.bwksoftware.android.seafile.data.entity.Account
+import com.bwksoftware.android.seafile.data.entity.Avatar
 import com.bwksoftware.android.seafile.data.entity.Repo
 import io.reactivex.Observable
 import okhttp3.RequestBody
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RestAPI {
 
@@ -32,9 +30,13 @@ interface RestAPI {
     }
 
     @GET("repos/")
-    fun getRepoList(@Header("Authorization") auth:String): Observable<List<Repo>>
+    fun getRepoList(@Header("Authorization") auth: String): Observable<List<Repo>>
 
 
     @POST("auth-token/")
-    fun postAccountToken(@Body credentials : RequestBody): Observable<Account>
+    fun postAccountToken(@Body credentials: RequestBody): Observable<Account>
+
+    @GET("avatars/user/{username}/resized/128/")
+    fun getAvatar(@Path(value = "username", encoded = true) username: String,
+                  @Header("Authorization") auth: String): Observable<Avatar>
 }

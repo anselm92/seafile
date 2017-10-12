@@ -17,6 +17,7 @@
 package com.bwksoftware.android.seafile.data.entity
 
 import com.bwksoftware.android.seafile.domain.AccountTemplate
+import com.bwksoftware.android.seafile.domain.AvatarTemplate
 import com.bwksoftware.android.seafile.domain.RepoTemplate
 
 
@@ -29,7 +30,11 @@ class EntityDataMapper {
     }
 
     fun transformAccountToken(account: Account): AccountTemplate {
-        return AccountTemplate(account.token!!)
+        return AccountTemplate(account.token!!,account.username, account.imgUrl)
+    }
+
+    fun transformAvatar(avatar: Avatar): AvatarTemplate {
+        return AvatarTemplate(avatar.url!!)
     }
 
     fun transformRepo(repo: Repo): RepoTemplate {

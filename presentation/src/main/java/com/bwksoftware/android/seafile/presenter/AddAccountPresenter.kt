@@ -16,22 +16,20 @@
 
 package com.bwksoftware.android.seafile.presenter
 
-import android.accounts.Account
-import android.accounts.AccountManager
 import android.content.Context
 import android.util.Log
 import com.bwksoftware.android.seafile.authentication.Authenticator
+import com.bwksoftware.android.seafile.authentication.SeafAccountManager
 import com.bwksoftware.android.seafile.domain.AccountTemplate
 import com.bwksoftware.android.seafile.domain.interactor.DefaultObserver
 import com.bwksoftware.android.seafile.domain.interactor.GetAccountToken
-import com.bwksoftware.android.seafile.mapper.AccountModelMapper
 import com.bwksoftware.android.seafile.view.views.AddAccountView
 import javax.inject.Inject
 
 
 class AddAccountPresenter @Inject constructor(private val getAccountToken: GetAccountToken,
                                               val context: Context,
-                                              private val accountMapper: AccountModelMapper) {
+                                              val seafAccountManager: SeafAccountManager) {
 
     internal lateinit var accountView: AddAccountView
     @Inject lateinit var authenticator: Authenticator
@@ -39,17 +37,6 @@ class AddAccountPresenter @Inject constructor(private val getAccountToken: GetAc
     fun createNewAccount(username: String, password: String, serverAddress: String) {
         this.getAccountToken.execute(AccountTokenObserver(username, password, serverAddress),
                 GetAccountToken.Params(username, password))
-    }
-
-
-    private fun createAccount(email: String, password: String, serverAddress: String,
-                              authToken: String): Account {
-        val account = Account(email, context.packageName)
-        val am = AccountManager.get(context)
-        am.addAccountExplicitly(account, password, null)
-        am.setAuthToken(account, "full_access", authToken)
-        am.setUserData(account, "Server", serverAddress)
-        return account
     }
 
     private inner class AccountTokenObserver(val username: String,
@@ -67,9 +54,9 @@ class AddAccountPresenter @Inject constructor(private val getAccountToken: GetAc
 
         override fun onNext(account: AccountTemplate) {
             Log.d("AccountPresenter", account.token)
-
-            val account = createAccount(username, password, serverAddress, account.token)
-            accountView.onCreateSuccessful(account)
+            accountView.onCreateSuccessful(
+                    seafAccountManager.createAccount(username, password, serverAddress,
+                            account.token))
         }
     }
 

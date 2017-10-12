@@ -18,12 +18,10 @@ package com.bwksoftware.android.seafile.view.views
 
 import com.bwksoftware.android.seafile.model.Account
 import com.bwksoftware.android.seafile.model.NavBaseItem
-import com.bwksoftware.android.seafile.model.NavButton
 
 
 interface AccountView : LoadDataView {
     fun selectAccount(account : Account)
-    fun showAccounts(accounts:List<NavBaseItem>)
-    fun showNavList(items: List<NavBaseItem>) {}
+    fun showNavList(items: List<NavBaseItem>)
     fun refreshAccountList() {}
 }

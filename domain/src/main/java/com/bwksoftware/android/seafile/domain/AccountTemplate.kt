@@ -19,6 +19,6 @@ package com.bwksoftware.android.seafile.domain
 /**
  * Created by ansel on 10/10/2017.
  */
-class AccountTemplate(val token: String) {
+class AccountTemplate(val token: String, val username: String, var imageUrl: String) {
 
 }

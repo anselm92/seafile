@@ -103,10 +103,10 @@ class Authenticator @Inject constructor(val mContext: Context) : AbstractAccount
 
         return AccountManager.get(mContext).peekAuthToken(account,"full_access")
 
-//        val accountFuture = AccountManager.get(mContext).getAuthToken(account, "ah", null, activity,
+//        val accountFuture = SeafAccountManager.get(mContext).getAuthToken(account, "ah", null, activity,
 //                null, null)
 //        val authTokenBundle = accountFuture.result
-//        val authToken = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN)!!.toString()
+//        val authToken = authTokenBundle.get(SeafAccountManager.KEY_AUTHTOKEN)!!.toString()
 //        return authToken
     }
 

@@ -16,26 +16,38 @@
 
 package com.bwksoftware.android.seafile.mapper
 
-import android.view.Menu
 import android.view.MenuItem
+import com.bwksoftware.android.seafile.domain.AccountTemplate
 import com.bwksoftware.android.seafile.model.NavButton
 import javax.inject.Inject
-import com.bwksoftware.android.seafile.model.Account as SeafAccount
 import android.accounts.Account as AndroidAccount
+import com.bwksoftware.android.seafile.model.Account as SeafAccount
 
-/**
- * Created by ansel on 10/11/2017.
- */
+
 class AccountModelMapper @Inject constructor() {
 
     fun transformAccount(account: AndroidAccount): SeafAccount {
-        val img = if (account.name.contains("gmail")) "https://cloud.bwk-technik.de/thumbnail/7d82f01ced9f40fb8226/128/IMAG1747%20(2).jpg"
-        else "https://cloud.bwk-technik.de/thumbnail/7d82f01ced9f40fb8226/1024/IMAG1760.jpg"
-        return SeafAccount(account.name, img )
+        return SeafAccount( "",account.name,"")
     }
 
     fun transformAccounts(accounts: List<AndroidAccount>): List<SeafAccount> {
         return accounts.mapTo(ArrayList()) { transformAccount(it) }
+    }
+    fun transformToAccount(account: AccountTemplate): SeafAccount {
+        return SeafAccount(account.token, account.username, account.imageUrl)
+    }
+
+    fun transformToAccounts(accounts: List<AccountTemplate>): List<SeafAccount> {
+        return accounts.mapTo(ArrayList()) { transformToAccount(it) }
+    }
+
+
+    fun transformToAccountTemplate(account: SeafAccount): AccountTemplate {
+        return AccountTemplate(account.token,account.name, account.imgLink)
+    }
+
+    fun transformToAccountTemplates(accounts: List<SeafAccount>): List<AccountTemplate> {
+        return accounts.mapTo(ArrayList()) { transformToAccountTemplate(it) }
     }
 
     fun transformMenuItem(menu: MenuItem): NavButton {

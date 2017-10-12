@@ -17,7 +17,6 @@
 package com.bwksoftware.android.seafile.view.adapter
 
 import android.content.Context
-import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
@@ -28,16 +27,18 @@ import android.widget.TextView
 import com.bwksoftware.android.seafile.R
 import com.bwksoftware.android.seafile.model.Account
 import com.bwksoftware.android.seafile.model.NavBaseItem
-import com.bwksoftware.android.seafile.model.NavBaseItem.Companion.TYPE_HEADER
 import com.bwksoftware.android.seafile.model.NavBaseItem.Companion.TYPE_ACCOUNT
 import com.bwksoftware.android.seafile.model.NavBaseItem.Companion.TYPE_BUTTON
+import com.bwksoftware.android.seafile.model.NavBaseItem.Companion.TYPE_HEADER
 import com.bwksoftware.android.seafile.model.NavButton
+import com.jakewharton.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 
-
-class AccountAdapter(val onItemClickLister: OnItemClickListener, val context: Context) : Adapter<RecyclerView.ViewHolder>() {
+class AccountAdapter(val onItemClickLister: OnItemClickListener,
+                     val context: Context) : Adapter<RecyclerView.ViewHolder>() {
 
     private val mItems: ArrayList<NavBaseItem> = ArrayList()
+    val downloader = OkHttp3Downloader(context)
 
     fun setItems(newItems: List<NavBaseItem>) {
         mItems.clear()
@@ -56,19 +57,23 @@ class AccountAdapter(val onItemClickLister: OnItemClickListener, val context: Co
         val view: View
         return when (viewType) {
             TYPE_HEADER -> {
-                view = LayoutInflater.from(parent?.context).inflate(R.layout.nav_menu_header, parent, false);
+                view = LayoutInflater.from(parent?.context).inflate(R.layout.nav_menu_header,
+                        parent, false);
                 HeaderHolder(view)
             }
             TYPE_ACCOUNT -> {
-                view = LayoutInflater.from(parent?.context).inflate(R.layout.nav_menu_accounts_item, parent, false);
+                view = LayoutInflater.from(parent?.context).inflate(R.layout.nav_menu_accounts_item,
+                        parent, false);
                 AccountHolder(view)
             }
             TYPE_BUTTON -> {
-                view = LayoutInflater.from(parent?.context).inflate(R.layout.nav_menu_button_item, parent, false);
+                view = LayoutInflater.from(parent?.context).inflate(R.layout.nav_menu_button_item,
+                        parent, false);
                 ButtonHolder(view)
             }
             else -> {
-                view = LayoutInflater.from(parent?.context).inflate(R.layout.nav_menu_accounts_item, parent, false);
+                view = LayoutInflater.from(parent?.context).inflate(R.layout.nav_menu_accounts_item,
+                        parent, false);
                 AccountHolder(view)
             }
         }
@@ -77,10 +82,12 @@ class AccountAdapter(val onItemClickLister: OnItemClickListener, val context: Co
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val item = mItems[position]
         if (holder is HeaderHolder && item is Account) {
-            Picasso.with(context).load(item.imgLink).into(holder.accountImg)
+            Picasso.Builder(context).downloader(downloader).build().load(item.imgLink).into(
+                    holder.accountImg)
             holder.accountName.text = item.name
         } else if (holder is AccountHolder && item is Account) {
-            Picasso.with(context).load(item.imgLink).into(holder.accountImg)
+            Picasso.Builder(context).downloader(downloader).build().load(item.imgLink).into(
+                    holder.accountImg)
             holder.accountName.text = item.name
         } else if (holder is ButtonHolder && item is NavButton) {
             holder.itemImg.setImageDrawable(item.imgDrawable)
@@ -88,7 +95,8 @@ class AccountAdapter(val onItemClickLister: OnItemClickListener, val context: Co
         }
     }
 
-    inner class ButtonHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ButtonHolder(itemView: View) : RecyclerView.ViewHolder(
+            itemView), View.OnClickListener {
         val itemImg: ImageView = itemView.findViewById(R.id.item_img)
         val itemName: TextView = itemView.findViewById(R.id.item_name)
 
@@ -116,7 +124,8 @@ class AccountAdapter(val onItemClickLister: OnItemClickListener, val context: Co
         }
     }
 
-    inner class AccountHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class AccountHolder(itemView: View) : RecyclerView.ViewHolder(
+            itemView), View.OnClickListener {
 
         init {
             itemView.setOnClickListener(this)
