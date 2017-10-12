@@ -39,13 +39,14 @@ import com.bwksoftware.android.seafile.navigation.Navigator
 import com.bwksoftware.android.seafile.presenter.AccountPresenter
 import com.bwksoftware.android.seafile.view.adapter.AccountAdapter
 import com.bwksoftware.android.seafile.view.fragment.AddAccountFragment
+import com.bwksoftware.android.seafile.view.fragment.DirectoryFragment
 import com.bwksoftware.android.seafile.view.fragment.ReposFragment
 import com.bwksoftware.android.seafile.view.views.AccountView
 import javax.inject.Inject
 import android.accounts.Account as AndroidAccount
 
 
-class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemClickListener, AddAccountFragment.OnAddAccountListener {
+class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemClickListener, AddAccountFragment.OnAddAccountListener, ReposFragment.OnRepoClickedListener, DirectoryFragment.OnDirectoryClickedListener {
 
     lateinit private var navRecyclerView: RecyclerView
     lateinit private var toolbar: Toolbar
@@ -82,6 +83,18 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         presenter.showAccountList(navMenu)
     }
 
+    override fun onRepoClicked(repoId: String) {
+        navigator.navigateToDirectory(this, supportFragmentManager, presenter.currentAccount,
+                repoId,"")
+    }
+
+    override fun onDirectoryClicked(repoId: String, directory: String) {
+        navigator.navigateToDirectory(this, supportFragmentManager, presenter.currentAccount,
+                repoId,directory)    }
+
+    override fun onFileClicked(repoId: String, file: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun onButtonClicked(itemId: Int) {
         when (itemId) {

@@ -18,6 +18,7 @@ package com.bwksoftware.android.seafile.domain.repository
 
 import com.bwksoftware.android.seafile.domain.AccountTemplate
 import com.bwksoftware.android.seafile.domain.AvatarTemplate
+import com.bwksoftware.android.seafile.domain.ItemTemplate
 import com.bwksoftware.android.seafile.domain.RepoTemplate
 import io.reactivex.Observable
 
@@ -26,6 +27,8 @@ import io.reactivex.Observable
  */
 interface Repository {
     fun getRepoList(authToken: String): Observable<List<RepoTemplate>>
-    fun getAvatar(username: String,authToken: String): Observable<AvatarTemplate>
-    fun getAccountToken(username: String, password : String): Observable<AccountTemplate>
+    fun getAvatar(username: String, authToken: String): Observable<AvatarTemplate>
+    fun getAccountToken(username: String, password: String): Observable<AccountTemplate>
+    fun getDirectoryEntries(authToken: String, repoId: String,
+                            directory: String): Observable<List<ItemTemplate>>
 }

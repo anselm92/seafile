@@ -18,6 +18,7 @@ package com.bwksoftware.android.seafile.data.net
 
 import com.bwksoftware.android.seafile.data.entity.Account
 import com.bwksoftware.android.seafile.data.entity.Avatar
+import com.bwksoftware.android.seafile.data.entity.Item
 import com.bwksoftware.android.seafile.data.entity.Repo
 import com.google.gson.Gson
 import io.reactivex.Observable
@@ -59,9 +60,18 @@ class RestApiImpl @Inject constructor() {
     }
 
     fun getRepoList(authToken: String): Observable<List<Repo>> {
-        return service.getRepoList("Token "+authToken)
+        return service.getRepoList("Token " + authToken)
     }
-    fun getAvatar(username: String,authToken: String): Observable<Avatar> {
-        return service.getAvatar(username,"Token "+authToken)
+
+    fun getAvatar(username: String, authToken: String): Observable<Avatar> {
+        return service.getAvatar(username, "Token " + authToken)
     }
+
+    fun getDirectoryEntries(authToken: String, repoID: String,
+                            directory: String): Observable<List<Item>> {
+        if(directory.isEmpty())
+            return service.getDirectoryEntries(repoID, "Token " +authToken)
+        return service.getDirectoryEntries(repoID,"Token " + authToken, directory)
+    }
+
 }

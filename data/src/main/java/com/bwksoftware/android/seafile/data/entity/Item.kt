@@ -14,8 +14,28 @@
  *    limitations under the License.
  */
 
-package com.bwksoftware.android.seafile.domain
+package com.bwksoftware.android.seafile.data.entity
 
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-class RepoTemplate(val id: String?, val name: String?, val permission: String?, val owner: String?,val encrypted: Boolean?,
-                   val mtime: Long?, val size: Long?)
+/**
+ * Created by ansel on 10/10/2017.
+ */
+class Item {
+    @SerializedName("id")
+    @Expose
+    open var id: String? = null
+
+    @SerializedName("type")
+    @Expose
+    open var type: String? = null
+
+    @SerializedName("name")
+    @Expose
+    open var name: String? = null
+
+    @SerializedName("size")
+    @Expose
+    open var size: Long = 0
+}

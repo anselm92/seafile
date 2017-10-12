@@ -30,10 +30,10 @@ import javax.inject.Inject
 
 
 class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener {
-    override fun onRepoClicked(repo: Repo) {
 
+    interface OnRepoClickedListener {
+        fun onRepoClicked(repoId: String)
     }
-
 
     companion object {
         private const val PARAM_ACCOUNT = "param_account"
@@ -76,6 +76,14 @@ class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener 
     override fun renderRepos(repos: List<Repo>) {
         repoAdapter.setItems(repos)
         repoAdapter.notifyDataSetChanged()
+    }
+
+    override fun onRepoClicked(repo: Repo) {
+        val attachedActivity = activity
+        when (attachedActivity) {
+            is OnRepoClickedListener -> attachedActivity.onRepoClicked(
+                    repo.id!!)
+        }
     }
 
     private fun loadRepos() {

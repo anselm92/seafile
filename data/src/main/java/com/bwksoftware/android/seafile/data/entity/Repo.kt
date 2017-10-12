@@ -19,10 +19,13 @@ package com.bwksoftware.android.seafile.data.entity
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-/**
- * Created by ansel on 10/10/2017.
- */
+
 class Repo {
+
+    @SerializedName("id")
+    @Expose
+    open var id: String? = null
+
     @SerializedName("name")
     @Expose
     open var name: String? = null

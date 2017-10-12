@@ -1,0 +1,118 @@
+/*
+ *    Copyright 2018 BWK Technik GbR
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package com.bwksoftware.android.seafile.view.fragment
+
+import android.accounts.Account
+import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import com.bwksoftware.android.seafile.R
+import com.bwksoftware.android.seafile.model.Item
+import com.bwksoftware.android.seafile.presenter.DirectoryPresenter
+import com.bwksoftware.android.seafile.view.adapter.DirectoryAdapter
+import com.bwksoftware.android.seafile.view.views.DirectoryView
+import javax.inject.Inject
+
+
+class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItemClickListener {
+
+
+    interface OnDirectoryClickedListener {
+        fun onDirectoryClicked(repoId: String, directory: String)
+        fun onFileClicked(repoId: String, file: String)
+    }
+
+    companion object {
+        private const val PARAM_ACCOUNT = "param_account"
+        private const val PARAM_DIRECTORY = "param_directory"
+        private const val PARAM_REPOID = "param_repoid"
+
+        fun forAccountRepoAndDir(account: Account, repoId: String,
+                                 directory: String): DirectoryFragment {
+            val reposFragment = DirectoryFragment()
+            val arguments = Bundle()
+            arguments.putString(PARAM_ACCOUNT, account.name)
+            arguments.putString(PARAM_DIRECTORY, directory)
+            arguments.putString(PARAM_REPOID, repoId)
+            reposFragment.arguments = arguments
+            return reposFragment
+        }
+    }
+
+    @Inject lateinit var directoryPresenter: DirectoryPresenter
+    lateinit var directoryAdapter: DirectoryAdapter
+
+    lateinit var rvDirectory: RecyclerView
+
+    override fun layoutId() = R.layout.fragment_directory
+
+    override fun activity() = activity
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        appComponent.inject(this)
+        directoryAdapter = DirectoryAdapter(this, context)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        rvDirectory = view?.findViewById(R.id.rv_directory)!!
+        rvDirectory.adapter = directoryAdapter
+        rvDirectory.layoutManager = LinearLayoutManager(this.context)
+        if (firstTimeCreated(savedInstanceState)) {
+            initializeView()
+            loadDirectory()
+        }
+    }
+
+    override fun renderDirectoryEntries(entries: List<Item>) {
+        directoryAdapter.setItems(entries)
+        directoryAdapter.notifyDataSetChanged()
+    }
+
+    override fun onDirectoryClicked(item: Item) {
+        val attachedActivity = activity
+        when (attachedActivity) {
+            is OnDirectoryClickedListener -> attachedActivity.onDirectoryClicked(
+                    arguments.getString(
+                            PARAM_REPOID),
+                    arguments.getString(PARAM_DIRECTORY) + "/" + item.name)
+        }
+    }
+
+    override fun onFileClicked(item: Item) {
+        val attachedActivity = activity
+        when (attachedActivity) {
+            is OnDirectoryClickedListener -> attachedActivity.onFileClicked(
+                    arguments.getString(
+                    PARAM_REPOID),
+                    arguments.getString(PARAM_DIRECTORY) + "/" + item.name)
+        }
+    }
+
+    private fun loadDirectory() {
+        directoryPresenter.getDirectoryEntries(arguments.getString(PARAM_ACCOUNT),
+                arguments.getString(
+                        PARAM_REPOID), arguments.getString(PARAM_DIRECTORY))
+    }
+
+    private fun initializeView() {
+        directoryPresenter.directoryView = this
+    }
+
+}

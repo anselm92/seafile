@@ -22,6 +22,7 @@ import com.bwksoftware.android.seafile.domain.executor.ThreadExecutor
 import com.bwksoftware.android.seafile.domain.repository.Repository
 import com.bwksoftware.android.seafile.internal.di.modules.ApplicationModule
 import com.bwksoftware.android.seafile.view.fragment.AddAccountFragment
+import com.bwksoftware.android.seafile.view.fragment.DirectoryFragment
 import com.bwksoftware.android.seafile.view.fragment.ReposFragment
 import com.bwksoftware.android.seafile.view.fragment.UploadsFragment
 import dagger.Component
@@ -39,6 +40,7 @@ interface ApplicationComponent {
     fun inject(reposFragment: ReposFragment)
     fun inject(uploadsFragment: UploadsFragment)
     fun inject(addAccountFragment: AddAccountFragment)
+    fun inject(directoryFragment: DirectoryFragment)
 
     //    val androidApplication: App
 //

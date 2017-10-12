@@ -18,6 +18,7 @@ package com.bwksoftware.android.seafile.data.net
 
 import com.bwksoftware.android.seafile.data.entity.Account
 import com.bwksoftware.android.seafile.data.entity.Avatar
+import com.bwksoftware.android.seafile.data.entity.Item
 import com.bwksoftware.android.seafile.data.entity.Repo
 import io.reactivex.Observable
 import okhttp3.RequestBody
@@ -32,6 +33,14 @@ interface RestAPI {
     @GET("repos/")
     fun getRepoList(@Header("Authorization") auth: String): Observable<List<Repo>>
 
+    @GET("repos/{repo-id}/dir/")
+    fun getDirectoryEntries(@Path(value = "repo-id") repo_id: String,
+                            @Header("Authorization") auth: String): Observable<List<Item>>
+
+    @GET("repos/{repo-id}/dir/")
+    fun getDirectoryEntries(@Path(value = "repo-id") repo_id: String,
+                            @Header("Authorization") auth: String,
+                            @Query("p") directory: String): Observable<List<Item>>
 
     @POST("auth-token/")
     fun postAccountToken(@Body credentials: RequestBody): Observable<Account>

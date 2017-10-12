@@ -14,8 +14,11 @@
  *    limitations under the License.
  */
 
-package com.bwksoftware.android.seafile.domain
+package com.bwksoftware.android.seafile.view.views
+
+import com.bwksoftware.android.seafile.model.Item
 
 
-class RepoTemplate(val id: String?, val name: String?, val permission: String?, val owner: String?,val encrypted: Boolean?,
-                   val mtime: Long?, val size: Long?)
+interface DirectoryView : LoadDataView {
+    fun renderDirectoryEntries(entries : List<Item>)
+}

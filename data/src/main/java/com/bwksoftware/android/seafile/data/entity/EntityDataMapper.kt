@@ -18,6 +18,7 @@ package com.bwksoftware.android.seafile.data.entity
 
 import com.bwksoftware.android.seafile.domain.AccountTemplate
 import com.bwksoftware.android.seafile.domain.AvatarTemplate
+import com.bwksoftware.android.seafile.domain.ItemTemplate
 import com.bwksoftware.android.seafile.domain.RepoTemplate
 
 
@@ -38,13 +39,21 @@ class EntityDataMapper {
     }
 
     fun transformRepo(repo: Repo): RepoTemplate {
-        val newRepo = RepoTemplate(repo.name, repo.permission, repo.owner, repo.encrypted,
+        val newRepo = RepoTemplate(repo.id, repo.name, repo.permission, repo.owner, repo.encrypted,
                 repo.mtime, repo.size)
         return newRepo
     }
 
     fun transformRepoList(repoList: List<Repo>): List<RepoTemplate> {
         return repoList.mapTo(ArrayList<RepoTemplate>()) { transformRepo(it) }
+    }
+
+    fun transformItemList(itemList: List<Item>): List<ItemTemplate> {
+        return itemList.mapTo(ArrayList<ItemTemplate>()) { transformItem(it) }
+    }
+
+    fun transformItem(item: Item): ItemTemplate {
+        return ItemTemplate(item.id, item.type, item.name, item.size)
     }
 }
 

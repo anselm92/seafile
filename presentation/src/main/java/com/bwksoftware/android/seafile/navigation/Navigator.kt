@@ -21,11 +21,26 @@ import android.content.Context
 import android.support.v4.app.FragmentManager
 import com.bwksoftware.android.seafile.R
 import com.bwksoftware.android.seafile.view.fragment.AddAccountFragment
+import com.bwksoftware.android.seafile.view.fragment.DirectoryFragment
 import com.bwksoftware.android.seafile.view.fragment.ReposFragment
 import com.bwksoftware.android.seafile.view.fragment.UploadsFragment
 import javax.inject.Inject
 
 class Navigator @Inject constructor() {
+
+    fun navigateToDirectory(context: Context, fragmentManager: FragmentManager, account: Account,
+                            repoId: String,directory: String) {
+
+        val directoryFragment = DirectoryFragment.forAccountRepoAndDir(account,repoId,directory)
+
+        val transaction = fragmentManager.beginTransaction()
+        // Store the Fragment in stack
+        transaction.addToBackStack(DirectoryFragment::class.java.name)
+        //        transaction.setCustomAnimations(R.anim.enter_from_center,R.anim.exit_from_center);
+        transaction.replace(R.id.container, directoryFragment,
+                DirectoryFragment::class.java.name).commit()
+    }
+
     fun navigateToReposView(context: Context, fragmentManager: FragmentManager, account: Account) {
 //        var exercisesFragment = fragmentManager.findFragmentByTag(ReposFragment::class.java.name)
 //        if (exercisesFragment == null)

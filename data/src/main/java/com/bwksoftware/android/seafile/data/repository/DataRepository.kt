@@ -20,6 +20,7 @@ import com.bwksoftware.android.seafile.data.entity.entityDataMapper
 import com.bwksoftware.android.seafile.data.net.RestApiImpl
 import com.bwksoftware.android.seafile.domain.AccountTemplate
 import com.bwksoftware.android.seafile.domain.AvatarTemplate
+import com.bwksoftware.android.seafile.domain.ItemTemplate
 import com.bwksoftware.android.seafile.domain.RepoTemplate
 import com.bwksoftware.android.seafile.domain.repository.Repository
 import io.reactivex.Observable
@@ -27,8 +28,13 @@ import javax.inject.Inject
 
 
 class DataRepository @Inject constructor(private val restService: RestApiImpl) : Repository {
+    override fun getDirectoryEntries(authToken: String, repoId: String,
+                                     directory: String): Observable<List<ItemTemplate>> {
+        return restService.getDirectoryEntries(authToken, repoId, directory).map(
+                entityDataMapper::transformItemList)
+    }
 
-    override fun getAvatar(username: String, token: String) : Observable<AvatarTemplate>{
+    override fun getAvatar(username: String, token: String): Observable<AvatarTemplate> {
         return restService.getAvatar(username, token).map(entityDataMapper::transformAvatar)
     }
 
@@ -36,7 +42,8 @@ class DataRepository @Inject constructor(private val restService: RestApiImpl) :
         return restService.getRepoList(authToken).map(entityDataMapper::transformRepoList)
     }
 
-    override fun getAccountToken(username: String, password : String): Observable<AccountTemplate> {
-        return restService.getAccountToken(username,password ).map(entityDataMapper::transformAccountToken)
+    override fun getAccountToken(username: String, password: String): Observable<AccountTemplate> {
+        return restService.getAccountToken(username, password).map(
+                entityDataMapper::transformAccountToken)
     }
 }
