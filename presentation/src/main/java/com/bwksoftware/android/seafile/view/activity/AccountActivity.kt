@@ -185,11 +185,13 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
     }
 
     private fun initScreen(){
-        reposFragment = ReposFragment.forAccount(presenter.currentAccount)
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.container, reposFragment)
-                .commit();
-        setTitle(reposFragment!!.name());
+        if(presenter.currentAccount.name!="None") {
+            reposFragment = ReposFragment.forAccount(presenter.currentAccount)
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, reposFragment,ReposFragment::class.java.name)
+                    .commit()
+            setTitle(reposFragment!!.name())
+        }
     }
 
     private var doubleBackToExitPressedOnce: Boolean = false

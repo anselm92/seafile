@@ -44,6 +44,10 @@ class SeafAccountManager @Inject constructor(val authenticator: Authenticator,
         return currentAndroidAccount
     }
 
+    fun getServerAddress(account: Account): String? {
+        return AccountManager.get(context).getUserData(account,"Server")
+    }
+
     fun getCurrentAccount(): Account {
         var account = getAccountByName(sharedPrefsController.getPreference(
                 SharedPrefsController.Preference.CURRENT_USER_ACCOUNT))

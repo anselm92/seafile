@@ -22,6 +22,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.bwksoftware.android.seafile.R
+import com.bwksoftware.android.seafile.authentication.SeafAccountManager
 import com.bwksoftware.android.seafile.model.Item
 import com.bwksoftware.android.seafile.presenter.DirectoryPresenter
 import com.bwksoftware.android.seafile.view.adapter.DirectoryAdapter
@@ -60,6 +61,8 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
     }
 
     @Inject lateinit var directoryPresenter: DirectoryPresenter
+    @Inject lateinit var seafAccountManager: SeafAccountManager
+
     lateinit var directoryAdapter: DirectoryAdapter
 
     lateinit var rvDirectory: RecyclerView
@@ -74,7 +77,12 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        directoryAdapter = DirectoryAdapter(this, context)
+        val address = seafAccountManager.getServerAddress(seafAccountManager.getCurrentAccount())
+        directoryAdapter = DirectoryAdapter(this,
+                address!!,
+                arguments.getString(PARAM_REPOID),
+                arguments.getString(
+                        PARAM_DIRECTORY), seafAccountManager.getCurrentAccountToken(), context)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -121,6 +129,10 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
 
     private fun initializeView() {
         directoryPresenter.directoryView = this
+        rvDirectory.setHasFixedSize(true)
+        rvDirectory.setItemViewCacheSize(20)
+        rvDirectory.isDrawingCacheEnabled = true
+        rvDirectory.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
     }
 
 }

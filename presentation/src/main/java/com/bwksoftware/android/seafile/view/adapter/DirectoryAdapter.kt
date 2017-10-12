@@ -32,11 +32,17 @@ import com.bwksoftware.android.seafile.model.FileItem
 import com.bwksoftware.android.seafile.model.Item
 import com.bwksoftware.android.seafile.model.Item.Companion.TYPE_DIRECTORY
 import com.bwksoftware.android.seafile.model.Item.Companion.TYPE_FILE
-
+import com.bwksoftware.android.seafile.utils.FileUtils
+import com.nostra13.universalimageloader.core.DisplayImageOptions
+import com.nostra13.universalimageloader.core.ImageLoader
+import java.net.URLEncoder
 
 
 class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
-                  val context: Context) : Adapter<RecyclerView.ViewHolder>() {
+                       val address: String,
+                       val repoId: String, val directory: String,
+                       val token: String,
+                       val context: Context) : Adapter<RecyclerView.ViewHolder>() {
 
     private val mItems: ArrayList<Item> = ArrayList()
 
@@ -55,7 +61,7 @@ class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         val view: View
-        return when(viewType){
+        return when (viewType) {
             TYPE_FILE -> {
                 view = LayoutInflater.from(parent?.context).inflate(R.layout.file_item,
                         parent, false)
@@ -79,11 +85,17 @@ class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = mItems[position]
 
-
-        if(holder is FileHolder && item is FileItem){
+        if (holder is FileHolder && item is FileItem) {
             holder.itemName.text = item.name
-            holder.itemImg.setImageResource(R.drawable.empty_profile)
-        } else if(holder is DirectoryHolder && item is DirectoryItem){
+            if (FileUtils.isViewableImage(item.name!!)) {
+                val file = URLEncoder.encode(directory + "/" + item.name, "UTF-8")
+                val url = FileUtils.getThumbnailUrl(address, repoId, file, 100)
+                ImageLoader.getInstance().displayImage(url, holder.itemImg, getDisplayImageOptions);
+
+            } else
+                holder.itemImg.setImageResource(R.drawable.empty_profile)
+
+        } else if (holder is DirectoryHolder && item is DirectoryItem) {
             holder.itemImg.setImageResource(R.drawable.folder)
             holder.itemName.text = item.name
         }
@@ -128,6 +140,18 @@ class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
         fun onDirectoryClicked(item: Item)
         fun onFileClicked(item: Item)
     }
+
+    var getDisplayImageOptions: DisplayImageOptions? =
+        DisplayImageOptions.Builder()
+                .extraForDownloader(token)
+                .delayBeforeLoading(500)
+                .resetViewBeforeLoading(true)
+                .showImageForEmptyUri(R.drawable.empty_profile)
+                .showImageOnFail(R.drawable.empty_profile)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .build()
 
 
 }
