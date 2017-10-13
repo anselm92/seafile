@@ -18,6 +18,7 @@ package com.bwksoftware.android.seafile.view.fragment
 
 import android.accounts.Account
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -27,6 +28,8 @@ import com.bwksoftware.android.seafile.presenter.RepoPresenter
 import com.bwksoftware.android.seafile.view.adapter.RepoAdapter
 import com.bwksoftware.android.seafile.view.views.RepoView
 import javax.inject.Inject
+
+
 
 
 class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener {
@@ -69,6 +72,11 @@ class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener 
         rvRepos = view?.findViewById(R.id.rv_repos)!!
         rvRepos.adapter = repoAdapter
         rvRepos.layoutManager = LinearLayoutManager(this.context)
+        val mDividerItemDecoration = DividerItemDecoration(
+                rvRepos.getContext(),
+                (rvRepos.layoutManager as LinearLayoutManager).orientation
+        )
+        rvRepos.addItemDecoration(mDividerItemDecoration)
         if (firstTimeCreated(savedInstanceState)) {
             initializeView()
             loadRepos()
@@ -94,6 +102,7 @@ class ReposFragment : BaseFragment(), RepoView, RepoAdapter.OnItemClickListener 
 
     private fun initializeView() {
         repoPresenter.repoView = this
+
     }
 
 }

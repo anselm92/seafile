@@ -19,10 +19,12 @@ package com.bwksoftware.android.seafile.view.activity
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -49,13 +51,12 @@ import javax.inject.Inject
 import android.accounts.Account as AndroidAccount
 
 
-
-
 class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemClickListener, AddAccountFragment.OnAddAccountListener, ReposFragment.OnRepoClickedListener, DirectoryFragment.OnDirectoryClickedListener {
 
     lateinit private var navRecyclerView: RecyclerView
-    lateinit private var toolbar: Toolbar
+    lateinit var toolbar: Toolbar
     lateinit private var drawerLayout: DrawerLayout
+    lateinit var coordinator : CoordinatorLayout
     lateinit private var accountAdapter: AccountAdapter
     lateinit private var navMenu: Menu
 
@@ -90,15 +91,19 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
 
     override fun onRepoClicked(fragment: BaseFragment, repoId: String, repoName: String) {
         navigator.navigateToDirectory(this, fragment.childFragmentManager, presenter.currentAccount,
-                repoId,repoName,"")
+                repoId, repoName, "")
     }
 
-    override fun onDirectoryClicked(fragment: BaseFragment, repoId: String,repoName: String, directory: String) {
+    override fun onDirectoryClicked(fragment: BaseFragment, repoId: String, repoName: String,
+                                    directory: String) {
         navigator.navigateToDirectory(this, fragment.childFragmentManager, presenter.currentAccount,
-                repoId,repoName,directory)    }
+                repoId, repoName, directory)
+    }
 
-    override fun onFileClicked(fragment: BaseFragment, repoId: String,repoName: String, file: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onFileClicked(fragment: BaseFragment, repoId: String, repoName: String, directory : String,
+                               file: String) {
+        navigator.navigateToImageViewer(this, fragment.childFragmentManager,
+                presenter.currentAccount, repoId, repoName,directory, file)
     }
 
     override fun onButtonClicked(itemId: Int) {
@@ -151,6 +156,7 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         accountAdapter = AccountAdapter(this, this)
         presenter.view = this
         toolbar = findViewById(R.id.toolbar)
+        coordinator = findViewById(R.id.coordinator)
         setSupportActionBar(toolbar)
         if (savedInstanceState == null) {
             initNavigationDrawer()
@@ -168,7 +174,7 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         return true
     }
 
-    fun setTitle(title: String){
+    fun setTitle(title: String) {
         toolbar.title = title
     }
 
@@ -183,14 +189,19 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
                 R.string.drawer_open, R.string.drawer_close) {
         }
         drawerLayout!!.addDrawerListener(actionBarDrawerToggle)
+        val mDividerItemDecoration = DividerItemDecoration(
+                navRecyclerView.getContext(),
+                (navRecyclerView.layoutManager as LinearLayoutManager).orientation
+        )
+        navRecyclerView.addItemDecoration(mDividerItemDecoration)
         actionBarDrawerToggle.syncState()
     }
 
-    private fun initScreen(){
-        if(presenter.currentAccount.name!="None") {
+    private fun initScreen() {
+        if (presenter.currentAccount.name != "None") {
             reposFragment = ReposFragment.forAccount(presenter.currentAccount)
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, reposFragment,ReposFragment::class.java.name)
+                    .replace(R.id.container, reposFragment, ReposFragment::class.java.name)
                     .commit()
             setTitle(reposFragment!!.name())
         }

@@ -15,9 +15,10 @@
   ~    limitations under the License.
   -->
 
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:id="@+id/container">
     <android.support.v4.widget.SwipeRefreshLayout
@@ -25,12 +26,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
             android:id="@+id/rv_directory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:scrollbars="vertical" />
+            app:fastScrollAutoHide="true"
+            app:fastScrollAutoHideDelay="1500"
+            app:fastScrollPopupBackgroundSize="88dp"
+            app:fastScrollPopupBgColor="@color/colorAccent"
+            app:fastScrollPopupPosition="adjacent"
+            app:fastScrollPopupTextColor="@android:color/primary_text_dark"
+            app:fastScrollPopupTextSize="44sp"
+            app:fastScrollThumbColor="@color/colorAccent"
+            app:fastScrollEnabled="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.constraint.ConstraintLayout>

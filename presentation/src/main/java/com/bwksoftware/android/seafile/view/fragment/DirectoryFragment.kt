@@ -18,6 +18,7 @@ package com.bwksoftware.android.seafile.view.fragment
 
 import android.accounts.Account
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -37,7 +38,8 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
         fun onDirectoryClicked(fragment: BaseFragment, repoId: String, repoName: String,
                                directory: String)
 
-        fun onFileClicked(fragment: BaseFragment, repoId: String, repoName: String, file: String)
+        fun onFileClicked(fragment: BaseFragment, repoId: String, repoName: String,
+                          directory: String, file: String)
     }
 
     companion object {
@@ -90,6 +92,12 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
         rvDirectory = view?.findViewById(R.id.rv_directory)!!
         rvDirectory.adapter = directoryAdapter
         rvDirectory.layoutManager = LinearLayoutManager(this.context)
+        val mDividerItemDecoration = DividerItemDecoration(
+                rvDirectory.getContext(),
+                (rvDirectory.layoutManager as LinearLayoutManager).orientation
+        )
+
+        rvDirectory.addItemDecoration(mDividerItemDecoration)
         if (firstTimeCreated(savedInstanceState)) {
             initializeView()
             loadDirectory()
@@ -117,7 +125,7 @@ class DirectoryFragment : BaseFragment(), DirectoryView, DirectoryAdapter.OnItem
             is OnDirectoryClickedListener -> attachedActivity.onFileClicked(this,
                     arguments.getString(PARAM_REPOID),
                     arguments.getString(PARAM_REPONAME),
-                    arguments.getString(PARAM_DIRECTORY) + "/" + item.name)
+                    arguments.getString(PARAM_DIRECTORY), item.name!!)
         }
     }
 

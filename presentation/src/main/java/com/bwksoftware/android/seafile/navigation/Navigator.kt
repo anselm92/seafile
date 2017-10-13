@@ -27,7 +27,7 @@ import javax.inject.Inject
 class Navigator @Inject constructor() {
 
     fun findCurrentName(fragment: BaseFragment): String {
-        if(fragment.childFragmentManager!=null && fragment.childFragmentManager.backStackEntryCount>0){
+        if (fragment.childFragmentManager != null && fragment.childFragmentManager.backStackEntryCount > 0) {
             val lastFragmentName = fragment.childFragmentManager.getBackStackEntryAt(
                     fragment.childFragmentManager.backStackEntryCount - 1).name
             val childFragment = fragment.childFragmentManager.findFragmentByTag(
@@ -38,15 +38,33 @@ class Navigator @Inject constructor() {
         }
     }
 
-    fun setName(context: Context,fragment: BaseFragment, fragmentManager: FragmentManager){
-        var name : String = findCurrentName(fragment)
+    fun setName(context: Context, fragment: BaseFragment, fragmentManager: FragmentManager) {
+        var name: String = findCurrentName(fragment)
         (context as? AccountActivity)?.setTitle(name)
     }
 
-    fun navigateToDirectory(context: Context, fragmentManager: FragmentManager, account: Account,
-                            repoId: String,repoName: String, directory: String) {
+    fun navigateToImageViewer(context: Context, fragmentManager: FragmentManager, account: Account,
+                              repoId: String, repoName: String,directory: String, file: String) {
 
-        val directoryFragment = DirectoryFragment.forAccountRepoAndDir(account,repoId,repoName, directory)
+        val imageViewerFragment = ImageViewerFragment.forAccountRepoAndDir(account, repoId,
+                repoName, directory, file)
+
+        val transaction = fragmentManager.beginTransaction()
+        // Store the Fragment in stack
+        transaction.addToBackStack(ImageViewerFragment::class.java.name)
+        //        transaction.setCustomAnimations(R.anim.enter_from_center,R.anim.exit_from_center);
+        transaction.replace(R.id.container, imageViewerFragment,
+                ImageViewerFragment::class.java.name).commit()
+        fragmentManager.executePendingTransactions()
+        setName(context, imageViewerFragment, fragmentManager)
+
+    }
+
+    fun navigateToDirectory(context: Context, fragmentManager: FragmentManager, account: Account,
+                            repoId: String, repoName: String, directory: String) {
+
+        val directoryFragment = DirectoryFragment.forAccountRepoAndDir(account, repoId, repoName,
+                directory)
 
         val transaction = fragmentManager.beginTransaction()
         // Store the Fragment in stack
@@ -55,7 +73,7 @@ class Navigator @Inject constructor() {
         transaction.replace(R.id.container, directoryFragment,
                 DirectoryFragment::class.java.name).commit()
         fragmentManager.executePendingTransactions()
-        setName(context,directoryFragment,fragmentManager)
+        setName(context, directoryFragment, fragmentManager)
 
     }
 
@@ -72,7 +90,7 @@ class Navigator @Inject constructor() {
                 ReposFragment::class.java.name).commit()
         fragmentManager.executePendingTransactions()
 
-        setName(context, exercisesFragment as BaseFragment,fragmentManager)
+        setName(context, exercisesFragment as BaseFragment, fragmentManager)
 
     }
 
@@ -90,7 +108,7 @@ class Navigator @Inject constructor() {
                 UploadsFragment::class.java.name).commit()
         fragmentManager.executePendingTransactions()
 
-        setName(context, exercisesFragment as BaseFragment,fragmentManager)
+        setName(context, exercisesFragment as BaseFragment, fragmentManager)
 
     }
 
@@ -108,7 +126,7 @@ class Navigator @Inject constructor() {
         class.java.name).commit()
         fragmentManager.executePendingTransactions()
 
-        setName(context,addAccountFragment,fragmentManager)
+        setName(context, addAccountFragment, fragmentManager)
 
     }
 }
