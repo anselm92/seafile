@@ -28,6 +28,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bwksoftware.android.seafile.R
 import com.bwksoftware.android.seafile.model.Repo
+import com.bwksoftware.android.seafile.utils.FileUtils
 
 
 class RepoAdapter(val onItemClickLister: OnItemClickListener,
@@ -62,6 +63,7 @@ class RepoAdapter(val onItemClickLister: OnItemClickListener,
 
         holder.repoImg.setImageDrawable(context.getDrawable(item.drawable!!))
         holder.repoName.text = item.name
+        holder.repoDateModified.text = FileUtils.translateCommitTime(item.mtime!! * 1000, context)
 
     }
 
@@ -81,6 +83,8 @@ class RepoAdapter(val onItemClickLister: OnItemClickListener,
 
         val repoImg: ImageView = itemView.findViewById(R.id.repo_img)
         val repoName: TextView = itemView.findViewById(R.id.repo_name)
+        val repoDateModified: TextView = itemView.findViewById(R.id.repo_datemodified)
+
     }
 
     interface OnItemClickListener {

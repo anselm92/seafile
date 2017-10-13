@@ -31,6 +31,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Gravity
 import android.view.Menu
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.bwksoftware.android.seafile.App
 import com.bwksoftware.android.seafile.R
@@ -156,6 +157,7 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
         accountAdapter = AccountAdapter(this, this)
         presenter.view = this
         toolbar = findViewById(R.id.toolbar)
+        toolbar.title = ""
         coordinator = findViewById(R.id.coordinator)
         setSupportActionBar(toolbar)
         if (savedInstanceState == null) {
@@ -175,7 +177,10 @@ class AccountActivity : AppCompatActivity(), AccountView, AccountAdapter.OnItemC
     }
 
     fun setTitle(title: String) {
-        toolbar.title = title
+        val titleView: TextView = toolbar.findViewById(R.id.title)
+        titleView.text = title
+        //toolbar.title = title
+
     }
 
     private fun initNavigationDrawer() {

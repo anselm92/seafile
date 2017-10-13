@@ -31,6 +31,10 @@ class Item {
     @Expose
     open var type: String? = null
 
+    @SerializedName("mtime")
+    @Expose
+    open var mtime: Long? = null
+
     @SerializedName("name")
     @Expose
     open var name: String? = null

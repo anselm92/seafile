@@ -87,6 +87,9 @@ class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
 
         if (holder is FileHolder && item is FileItem) {
             holder.itemName.text = item.name
+            holder.itemDateSize.text = FileUtils.readableFileSize(
+                    item.size!!) + ", " + FileUtils.translateCommitTime(item.mtime!! * 1000,
+                    context)
             if (FileUtils.isViewableImage(item.name!!)) {
                 val file = URLEncoder.encode(directory + "/" + item.name, "UTF-8")
                 val url = FileUtils.getThumbnailUrl(address, repoId, file, 100)
@@ -98,6 +101,7 @@ class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
         } else if (holder is DirectoryHolder && item is DirectoryItem) {
             holder.itemImg.setImageResource(R.drawable.folder)
             holder.itemName.text = item.name
+            holder.itemDateMod.text = FileUtils.translateCommitTime(item.mtime!! * 1000, context)
         }
 
         //holder.repoImg.setImageDrawable(context.getDrawable(item.drawable!!))
@@ -118,6 +122,8 @@ class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
 
         val itemImg: ImageView = itemView.findViewById(R.id.file_img)
         val itemName: TextView = itemView.findViewById(R.id.file_name)
+        val itemDateSize: TextView = itemView.findViewById(R.id.file_datesize)
+
     }
 
     inner class DirectoryHolder(itemView: View) : RecyclerView.ViewHolder(
@@ -134,6 +140,7 @@ class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
 
         val itemImg: ImageView = itemView.findViewById(R.id.directory_img)
         val itemName: TextView = itemView.findViewById(R.id.directory_name)
+        val itemDateMod: TextView = itemView.findViewById(R.id.directory_datemodified)
     }
 
     interface OnItemClickListener {
@@ -142,16 +149,16 @@ class DirectoryAdapter(val onItemClickLister: OnItemClickListener,
     }
 
     var getDisplayImageOptions: DisplayImageOptions? =
-        DisplayImageOptions.Builder()
-                .extraForDownloader(token)
-                .delayBeforeLoading(500)
-                .resetViewBeforeLoading(true)
-                .showImageForEmptyUri(R.drawable.empty_profile)
-                .showImageOnFail(R.drawable.empty_profile)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .considerExifParams(true)
-                .build()
+            DisplayImageOptions.Builder()
+                    .extraForDownloader(token)
+                    .delayBeforeLoading(50)
+                    .resetViewBeforeLoading(true)
+                    .showImageForEmptyUri(R.drawable.empty_profile)
+                    .showImageOnFail(R.drawable.empty_profile)
+                    .cacheInMemory(true)
+                    .cacheOnDisk(true)
+                    .considerExifParams(true)
+                    .build()
 
 
 }

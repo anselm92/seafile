@@ -1,6 +1,7 @@
 package com.bwksoftware.android.seafile.components
 
 import android.support.v4.app.Fragment
+import com.bwksoftware.android.seafile.view.activity.AccountActivity
 import com.bwksoftware.android.seafile.view.fragment.BaseFragment
 
 
@@ -31,7 +32,7 @@ class BackPressImpl(private val parentFragment: Fragment?) : OnBackPressListener
                 // removing the child Fragment from stack
                 childFragmentManager.popBackStackImmediate()
                 parentFragment.onResume()
-                parentFragment.activity.title = (parentFragment as BaseFragment).name()
+                (parentFragment.activity as? AccountActivity)?.setTitle((parentFragment as BaseFragment).name())
 
             }
 

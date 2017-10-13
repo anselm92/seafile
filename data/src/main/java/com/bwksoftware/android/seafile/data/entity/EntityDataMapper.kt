@@ -53,7 +53,7 @@ class EntityDataMapper {
     }
 
     fun transformItem(item: Item): ItemTemplate {
-        return ItemTemplate(item.id, item.type, item.name, item.size)
+        return ItemTemplate(item.id, item.type, item.name, item.mtime,item.size)
     }
 }
 

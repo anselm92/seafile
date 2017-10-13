@@ -19,6 +19,7 @@ package com.bwksoftware.android.seafile
 import android.app.Application
 import android.content.Context
 import com.bwksoftware.android.seafile.components.AuthImageDownloader
+import com.bwksoftware.android.seafile.components.NutraBaseImageDecoder
 import com.bwksoftware.android.seafile.internal.di.components.ApplicationComponent
 import com.bwksoftware.android.seafile.internal.di.components.DaggerApplicationComponent
 import com.bwksoftware.android.seafile.internal.di.modules.ApplicationModule
@@ -53,12 +54,14 @@ class App : Application() {
         val config = ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
-                .threadPoolSize(10)
+                .memoryCacheSizePercentage(40)
+                .threadPoolSize(5)
                 .diskCacheFileNameGenerator(Md5FileNameGenerator())
                 .diskCacheSize(50 * 1024 * 1024) // 50 Mb
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .imageDecoder(NutraBaseImageDecoder(true))
                 .imageDownloader(AuthImageDownloader(context, 10000, 10000))
-                .writeDebugLogs() // Remove for release app
+//                .writeDebugLogs() // Remove for release app
                 .build()
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config)
