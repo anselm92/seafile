@@ -10,7 +10,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
-        applicationId "com.bwksoftware.android.seafile"
+        applicationId "com.bwksoftware.android.seasync.presentation"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
@@ -38,8 +38,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
+    apply plugin: 'kotlin-kapt'
     kapt 'com.google.dagger:dagger-compiler:2.11'
     compile 'com.google.dagger:dagger:2.11'
     compile 'io.reactivex.rxjava2:rxkotlin:2.1.0'

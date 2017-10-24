@@ -1,2 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bwksoftware.android.seafile.data" />
+    package="com.bwksoftware.android.seasync.data">
+
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <application>
+        <!--<service-->
+            <!--android:name="com.bwksoftware.android.seasync.data.service.FileSyncService"-->
+            <!--android:exported="true"-->
+            <!--android:process=":sync">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.bwksoftware.android.seasync.data.service.FileSyncAdapter" />-->
+            <!--</intent-filter>-->
+            <!--<meta-data-->
+                <!--android:name="com.bwksoftware.android.seasync.data.service.FileSyncAdapter"-->
+                <!--android:resource="@xml/filereposyncadapter" />-->
+        <!--</service>-->
+
+    </application>
+</manifest>

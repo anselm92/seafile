@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~    Copyright 2018 BWK Technik GbR
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +14,12 @@
   ~    limitations under the License.
   -->
 
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:id="@+id/container">
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/rv_users_refresh_layout"
         android:layout_width="match_parent"

@@ -8,5 +8,5 @@
         android:top="40dp"
         android:left="40dp"
         android:right="40dp"
-        android:bottom="40dp"/>
+        android:bottom="40dp" />
 </shape>

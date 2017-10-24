@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~    Copyright 2018 BWK Technik GbR
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +18,9 @@
     <item
         android:id="@+id/add_account"
         android:icon="@drawable/add_file"
-        android:title="Add account"/>
+        android:title="Add account" />
     <item
         android:id="@+id/manage_account"
         android:icon="@drawable/list_view"
-        android:title="Manage accounts"/>
+        android:title="Manage accounts" />
 </menu>
